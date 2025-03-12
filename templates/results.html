@@ -1,235 +1,312 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>✨ ML Analysis Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --primary: #6366f1;
-      --secondary: #8b5cf6;
-      --accent: #10b981;
-      --background: #f1f5f9;
-      --glass: rgba(255, 255, 255, 0.8);
-      --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, var(--background), #e2e8f0);
-      color: #1e293b;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-    }
-    .container {
-      background: var(--glass);
-      border-radius: 20px;
-      box-shadow: var(--shadow);
-      max-width: 1200px;
-      width: 95%;
-      padding: 2rem;
-      margin: 2rem;
-      backdrop-filter: blur(10px);
-    }
-    .header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-    .header h1 {
-      font-size: 2.5rem;
-      background: linear-gradient(45deg, var(--primary), var(--secondary));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin: 0;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .metric-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-    .metric-card {
-      background: var(--glass);
-      border-radius: 15px;
-      padding: 1.5rem;
-      box-shadow: var(--shadow);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .metric-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-    }
-    .metric-badge {
-      display: inline-flex;
-      align-items: center;
-      background: rgba(99, 102, 241, 0.1);
-      color: var(--primary);
-      padding: 0.3rem 0.8rem;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 2rem;
-    }
-    table th, table td {
-      padding: 1rem;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-    }
-    table th {
-      background: linear-gradient(45deg, var(--primary), var(--secondary));
-      color: #fff;
-      font-weight: 600;
-    }
-    table tr:hover td {
-      background: rgba(99, 102, 241, 0.05);
-    }
-    .best-model-card {
-      position: relative;
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(79, 70, 229, 0.1));
-      border: 2px solid var(--primary);
-      border-radius: 15px;
-      padding: 2rem;
-      margin-bottom: 2rem;
-      overflow: hidden;
-    }
-    .best-model-card::before {
-      content: "";
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(45deg, transparent, rgba(99, 102, 241, 0.1), transparent);
-      animation: rotate 4s linear infinite;
-      z-index: 0;
-    }
-    .best-model-card > * {
-      position: relative;
-      z-index: 1;
-    }
-    @keyframes rotate {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      background: linear-gradient(45deg, var(--primary), var(--secondary));
-      color: #fff;
-      padding: 0.8rem 1.5rem;
-      border: none;
-      border-radius: 10px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: background 0.3s ease;
-      cursor: pointer;
-    }
-    .btn:hover {
-      background: linear-gradient(45deg, var(--secondary), var(--primary));
-    }
-    @media(max-width: 768px) {
-      .header h1 {
-        font-size: 2rem;
-      }
-      .container {
-        padding: 1.5rem;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✨ ML Analysis Dashboard</title>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --secondary: #8b5cf6;
+            --accent: #10b981;
+            --background: #f8fafc;
+            --text: #1e293b;
+            --glass: rgba(255, 255, 255, 0.9);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            color: var(--text);
+            margin: 0;
+            padding: 2rem;
+            min-height: 100vh;
+            backdrop-filter: blur(20px);
+        }
+
+        .container {
+            background: var(--glass);
+            padding: 2.5rem;
+            border-radius: 2rem;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(16px);
+            max-width: 1400px;
+            margin: 0 auto;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .header h1 {
+            color: var(--secondary);
+            font-size: 2.5rem;
+            margin: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .metric-card {
+            background: var(--glass);
+            padding: 2rem;
+            border-radius: 1.5rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+
+        table {
+            width: 100%;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            background: var(--glass);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin: 2rem 0;
+        }
+
+        th {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.25rem;
+            font-weight: 500;
+            position: relative;
+        }
+
+        th:after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        td {
+            padding: 1.25rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            transition: background 0.3s ease;
+        }
+
+        tr:hover td {
+            background: rgba(99, 102, 241, 0.03);
+        }
+
+        .best-model-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(79, 70, 229, 0.1) 100%);
+            border: 2px solid var(--primary);
+            padding: 2rem;
+            border-radius: 1.5rem;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .best-model-card:before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+            animation: rotate 4s linear infinite;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 2rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 1rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: 0.5s;
+        }
+
+        .btn:hover:before {
+            left: 100%;
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .visualization-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .chart-card {
+            background: var(--glass);
+            padding: 2rem;
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .metric-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+            border-radius: 0.75rem;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+                border-radius: 1.5rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .metric-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
-  <div class="container">
-    <div class="header">
-      <h1>
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;">
-          <path d="M20 14V18H4V14M20 14L18 12L15 9M20 14L18 16L15 19M4 14L6 12L9 9M4 14L6 16L9 19M14 6C14 7.10457 13.1046 8 12 8C10.8954 8 10 7.10457 10 6C10 4.89543 10.8954 4 12 4C13.1046 4 14 4.89543 14 6Z" stroke="url(#gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-          <defs>
-            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#6366f1"/>
-              <stop offset="100%" stop-color="#8b5cf6"/>
-            </linearGradient>
-          </defs>
-        </svg>
-        Model Insights Dashboard
-      </h1>
+
+    <div class="container">
+        <div class="header">
+            <h1>
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M20 14V18H4V14M20 14L18 12L15 9M20 14L18 16L15 19M4 14L6 12L9 9M4 14L6 16L9 19M14 6C14 7.10457 13.1046 8 12 8C10.8954 8 10 7.10457 10 6C10 4.89543 10.8954 4 12 4C13.1046 4 14 4.89543 14 6Z"
+                        stroke="url(#gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <defs>
+                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:var(--primary);stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:var(--secondary);stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                Model Insights Dashboard
+            </h1>
+        </div>
+
+        <div class="metric-grid">
+            <div class="metric-card">
+                <div class="metric-badge">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem;">
+                        <path
+                            d="M9 17H7V10H9V17ZM17 14H15V10H17V14ZM11 16H13V20H11V16ZM20 4H4C2.897 4 2 4.897 2 6V18C2 19.103 2.897 20 4 20H20C21.103 20 22 19.103 22 18V6C22 4.897 21.103 4 20 4Z"
+                            fill="var(--primary)" />
+                    </svg>
+                    Dataset Dimensions
+                </div>
+                <h3>{{ dataset_info['shape'][0] }} Rows</h3>
+                <p>{{ dataset_info['shape'][1] }} Features</p>
+            </div>
+
+            {% set best_model = results | max(attribute='accuracy') %}
+            <div class="best-model-card">
+                <div style="position: relative; z-index: 1;">
+                    <div class="metric-badge" style="background: rgba(16, 185, 129, 0.1); color: var(--accent);">
+                        🏆 Best Performing Model
+                    </div>
+                    <h2>{{ best_model['model'] }}</h2>
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                        <div class="metric-badge">
+                            📈 {{ best_model['accuracy'] }}% Accuracy
+                        </div>
+                        <div class="metric-badge">
+                            ⚖️ {{ best_model['precision'] }}% Precision
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Model</th>
+                    <th>Accuracy</th>
+                    <th>Precision</th>
+                    <th>Recall</th>
+                    <th>F1 Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in results %}
+                <tr>
+                    <td><strong>{{ result['model'] }}</strong></td>
+                    <td>{{ result['accuracy'] }}%</td>
+                    <td>{{ result['precision'] }}%</td>
+                    <td>{{ result['recall'] }}%</td>
+                    <td>{{ result['f1_score'] }}%</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="/" class="btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem;">
+                    <path
+                        d="M19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H19C20.1046 3 21 3.89543 21 5V19C21 20.1046 20.1046 21 19 21ZM12 16V8M8 12H16"
+                        stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                New Analysis
+            </a>
+        </div>
     </div>
 
-    <div class="metric-grid">
-      <div class="metric-card">
-        <div class="metric-badge">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem;">
-            <path d="M9 17H7V10H9V17ZM17 14H15V10H17V14ZM11 16H13V20H11V16ZM20 4H4C2.897 4 2 4.897 2 6V18C2 19.103 2.897 20 4 20H20C21.103 20 22 19.103 22 18V6C22 4.897 21.103 4 20 4Z" fill="#6366f1"></path>
-          </svg>
-          Dataset Dimensions
-        </div>
-        <h3>{{ dataset_info['shape'][0] }} Rows</h3>
-        <p>{{ dataset_info['shape'][1] }} Features</p>
-      </div>
-
-      {% set best_model = results | max(attribute='accuracy') %}
-      <div class="best-model-card">
-        <div class="metric-badge" style="background: rgba(16,185,129,0.1); color: var(--accent);">
-          🏆 Best Performing Model
-        </div>
-        <h2>{{ best_model['model'] }}</h2>
-        <div style="display: flex; gap: 1rem; margin-top: 1rem;">
-          <div class="metric-badge">
-            📈 {{ best_model['accuracy'] }}% Accuracy
-          </div>
-          <div class="metric-badge">
-            ⚖️ {{ best_model['precision'] }}% Precision
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <table>
-      <thead>
-        <tr>
-          <th>Model</th>
-          <th>Accuracy</th>
-          <th>Precision</th>
-          <th>Recall</th>
-          <th>F1 Score</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for result in results %}
-        <tr>
-          <td><strong>{{ result['model'] }}</strong></td>
-          <td>{{ result['accuracy'] }}%</td>
-          <td>{{ result['precision'] }}%</td>
-          <td>{{ result['recall'] }}%</td>
-          <td>{{ result['f1_score'] }}%</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-
-    <div style="text-align: center;">
-      <a href="/" class="btn">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="vertical-align: middle; margin-right: 0.5rem;">
-          <path d="M19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H19C20.1046 3 21 3.89543 21 5V19C21 20.1046 20.1046 21 19 21ZM12 16V8M8 12H16" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-        </svg>
-        New Analysis
-      </a>
-    </div>
-  </div>
 </body>
+
 </html>
