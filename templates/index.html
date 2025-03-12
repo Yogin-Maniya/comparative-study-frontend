@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload Dataset - ML Analysis</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f8f9ff, #f6f7fb);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 440px;
+            text-align: center;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(12px);
+        }
+
+        .container:hover {
+            transform: translateY(-3px);
+        }
+
+        h2 {
+            margin-bottom: 1.5rem;
+            font-size: 1.75rem;
+            color: #1a1d24;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .upload-area {
+            position: relative;
+            margin: 1.5rem 0;
+        }
+
+        .file-input {
+            width: 100%;
+            height: 180px;
+            border: 2px dashed #d8dcf0;
+            border-radius: 1rem;
+            background: #fbfcff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-input:hover {
+            border-color: #6366f1;
+            background: rgba(99, 102, 241, 0.03);
+        }
+
+        .file-input.dragover {
+            border-color: #6366f1;
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .upload-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 1rem;
+            color: #6366f1;
+        }
+
+        .file-input p {
+            color: #6b7280;
+            font-size: 0.925rem;
+            margin-top: 0.5rem;
+        }
+
+        input[type="file"] {
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        button {
+            background: linear-gradient(135deg, #6366f1, #818cf8);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            width: 100%;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px rgba(99, 102, 241, 0.1);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 12px rgba(99, 102, 241, 0.15);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .footer {
+            margin-top: 1.5rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .selected-file {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #6366f1;
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Upload Dataset</h2>
+        <form action="/analyze" method="post" enctype="multipart/form-data">
+            <div class="upload-area">
+                <label class="file-input">
+                    <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                    </svg>
+                    <span>Drag & drop files here</span>
+                    <p>or click to browse</p>
+                    <input type="file" name="file" required>
+                </label>
+                <div class="selected-file" id="file-name"></div>
+            </div>
+            <button type="submit">Analyze Dataset</button>
+        </form>
+        <div class="footer">
+            Supported format: CSV
+        </div>
+    </div>
+
+    <script>
+        const fileInput = document.querySelector('input[type="file"]');
+        const fileName = document.getElementById('file-name');
+        const uploadArea = document.querySelector('.file-input');
+
+        fileInput.addEventListener('change', (e) => {
+            fileName.textContent = e.target.files[0].name;
+        });
+
+        ['dragenter', 'dragover'].forEach(event => {
+            uploadArea.addEventListener(event, () => {
+                uploadArea.classList.add('dragover');
+            });
+        });
+
+        ['dragleave', 'drop'].forEach(event => {
+            uploadArea.addEventListener(event, () => {
+                uploadArea.classList.remove('dragover');
+            });
+        });
+    </script>
+</body>
+
+</html>
