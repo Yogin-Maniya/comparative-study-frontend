@@ -24,6 +24,11 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 def preprocess_data(df):
+    # Check if dataset has at least one feature and one target column
+    if df.shape[1] < 2:
+        raise ValueError("Dataset must have at least one feature and one target column.")
+
+    # Fill numeric missing values with mean and then others with empty string
     df.fillna(df.mean(numeric_only=True), inplace=True)
     df.fillna('', inplace=True)
 
@@ -36,13 +41,22 @@ def preprocess_data(df):
     X = df.iloc[:, :-1]
     y = df.iloc[:, -1]
 
+    # Check if target appears continuous (numeric with many unique values) and discretize it
+    if pd.api.types.is_numeric_dtype(y) and y.nunique() > 10:
+        # Using quantile-based discretization into 4 bins
+        y = pd.qcut(y, q=4, labels=False, duplicates='drop')
+
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
 
-    return X_scaled, y, df
+    return X_scaled, y.values, df
 
 def evaluate_model(model, X, y):
-    kf = KFold(n_splits=5, shuffle=True, random_state=42)
+    if len(y) < 2:
+        raise ValueError("Dataset must have at least 2 samples for evaluation.")
+    # Use number of splits equal to min(5, number of samples)
+    n_splits = 5 if len(y) >= 5 else len(y)
+    kf = KFold(n_splits=n_splits, shuffle=True, random_state=42)
 
     acc_scores = []
     prec_scores = []
@@ -68,8 +82,6 @@ def evaluate_model(model, X, y):
         'f1_score': round(np.mean(f1_scores) * 100, 2)
     }
 
-
-
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -87,10 +99,11 @@ def analyze():
     if file and allowed_file(file.filename):
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
         file.save(filepath)
-
-        df = pd.read_csv(filepath)
-
-        X, y, processed_df = preprocess_data(df)
+        try:
+            df = pd.read_csv(filepath)
+            X, y, processed_df = preprocess_data(df)
+        except Exception as e:
+            return f"Error processing file: {e}"
 
         models = {
             'Logistic Regression': LogisticRegression(max_iter=1000),
@@ -101,17 +114,24 @@ def analyze():
             'Naive Bayes': GaussianNB()
         }
 
-
         results = []
         feature_importance = {}
 
         for model_name, model in models.items():
-            metrics = evaluate_model(model, X, y)
-            results.append({'model': model_name, **metrics})
-
-            if hasattr(model, 'feature_importances_'):
-                model.fit(X, y)
-                feature_importance[model_name] = model.feature_importances_
+            try:
+                metrics = evaluate_model(model, X, y)
+                results.append({'model': model_name, **metrics})
+                if hasattr(model, 'feature_importances_'):
+                    model.fit(X, y)
+                    feature_importance[model_name] = model.feature_importances_
+            except Exception as e:
+                # If a model evaluation fails, record the error and continue
+                results.append({'model': model_name,
+                                'accuracy': 0,
+                                'precision': 0,
+                                'recall': 0,
+                                'f1_score': 0})
+                print(f"Error evaluating {model_name}: {e}")
 
         feature_names = processed_df.columns[:-1]
 
@@ -138,4 +158,3 @@ def analyze():
 
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0', port=10000)
-
