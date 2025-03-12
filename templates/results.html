@@ -1,312 +1,252 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>✨ ML Analysis Dashboard</title>
-    <style>
-        :root {
-            --primary: #6366f1;
-            --secondary: #8b5cf6;
-            --accent: #10b981;
-            --background: #f8fafc;
-            --text: #1e293b;
-            --glass: rgba(255, 255, 255, 0.9);
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ML Analysis Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* Color variables remain unchanged */
+    :root {
+      --primary: #6366f1;
+      --secondary: #8b5cf6;
+      --accent: #10b981;
+      --background: #f8fafc;
+      --text: #1e293b;
+      --glass: rgba(255, 255, 255, 0.9);
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
 
-        body {
-            font-family: 'Poppins', system-ui, -apple-system, sans-serif;
-            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-            color: var(--text);
-            margin: 0;
-            padding: 2rem;
-            min-height: 100vh;
-            backdrop-filter: blur(20px);
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        .container {
-            background: var(--glass);
-            padding: 2.5rem;
-            border-radius: 2rem;
-            box-shadow: var(--shadow);
-            backdrop-filter: blur(16px);
-            max-width: 1400px;
-            margin: 0 auto;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--background);
+      color: var(--text);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
 
-        .header {
-            text-align: center;
-            margin-bottom: 3rem;
-            position: relative;
-        }
+    .dashboard {
+      display: flex;
+      width: 100%;
+      height: 100%;
+    }
 
-        .header h1 {
-            color: var(--secondary);
-            font-size: 2.5rem;
-            margin: 0;
-            display: inline-flex;
-            align-items: center;
-            gap: 1rem;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+    /* Sidebar styling */
+    .sidebar {
+      width: 250px;
+      background: var(--glass);
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      border-right: 1px solid rgba(255, 255, 255, 0.3);
+    }
 
-        .metric-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
+    .sidebar .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+    }
 
-        .metric-card {
-            background: var(--glass);
-            padding: 2rem;
-            border-radius: 1.5rem;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: transform 0.3s ease;
-        }
+    .sidebar .logo svg {
+      width: 40px;
+      height: 40px;
+    }
 
-        .metric-card:hover {
-            transform: translateY(-5px);
-        }
+    .sidebar .logo h2 {
+      font-size: 1.5rem;
+      color: var(--primary);
+    }
 
-        table {
-            width: 100%;
-            border-radius: 1.5rem;
-            overflow: hidden;
-            backdrop-filter: blur(10px);
-            background: var(--glass);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            margin: 2rem 0;
-        }
+    .sidebar nav ul {
+      list-style: none;
+    }
 
-        th {
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 1.25rem;
-            font-weight: 500;
-            position: relative;
-        }
+    .sidebar nav ul li {
+      margin-bottom: 1.5rem;
+    }
 
-        th:after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80%;
-            height: 2px;
-            background: rgba(255, 255, 255, 0.2);
-        }
+    .sidebar nav ul li a {
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 500;
+      transition: color 0.3s;
+    }
 
-        td {
-            padding: 1.25rem;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            transition: background 0.3s ease;
-        }
+    .sidebar nav ul li a:hover {
+      color: var(--primary);
+    }
 
-        tr:hover td {
-            background: rgba(99, 102, 241, 0.03);
-        }
+    /* Main content styling */
+    .main-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 2rem;
+    }
 
-        .best-model-card {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(79, 70, 229, 0.1) 100%);
-            border: 2px solid var(--primary);
-            padding: 2rem;
-            border-radius: 1.5rem;
-            margin: 2rem 0;
-            position: relative;
-            overflow: hidden;
-        }
+    .main-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+    }
 
-        .best-model-card:before {
-            content: "";
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(99, 102, 241, 0.1), transparent);
-            animation: rotate 4s linear infinite;
-        }
+    .main-header h1 {
+      font-size: 2rem;
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 1rem 2rem;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            color: white;
-            border-radius: 1rem;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            font-weight: 500;
-            position: relative;
-            overflow: hidden;
-            border: none;
-            cursor: pointer;
-        }
+    .new-analysis-btn {
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
 
-        .btn:before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: 0.5s;
-        }
+    .new-analysis-btn:hover {
+      transform: translateY(-3px);
+    }
 
-        .btn:hover:before {
-            left: 100%;
-        }
+    /* Metrics section */
+    .metrics {
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
 
-        @keyframes rotate {
-            0% {
-                transform: rotate(0deg);
-            }
+    .metric-card {
+      background: var(--glass);
+      padding: 1.5rem;
+      border-radius: 1rem;
+      box-shadow: var(--shadow);
+      flex: 1;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
 
-            100% {
-                transform: rotate(360deg);
-            }
-        }
+    .metric-card h2 {
+      margin-bottom: 0.5rem;
+      font-size: 1.75rem;
+      color: var(--primary);
+    }
 
-        .visualization-section {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 2rem;
-            margin: 3rem 0;
-        }
+    .metric-card p {
+      font-size: 1rem;
+    }
 
-        .chart-card {
-            background: var(--glass);
-            padding: 2rem;
-            border-radius: 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
+    .best-model {
+      border: 2px solid var(--primary);
+    }
 
-        .metric-badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.5rem 1rem;
-            background: rgba(99, 102, 241, 0.1);
-            color: var(--primary);
-            border-radius: 0.75rem;
-            font-weight: 500;
-        }
+    /* Data table styling */
+    .data-table {
+      background: var(--glass);
+      box-shadow: var(--shadow);
+      border-radius: 8px;
+      overflow: hidden;
+    }
 
-        @media (max-width: 768px) {
-            .container {
-                padding: 1.5rem;
-                border-radius: 1.5rem;
-            }
+    .data-table table {
+      width: 100%;
+      border-collapse: collapse;
+    }
 
-            .header h1 {
-                font-size: 2rem;
-            }
+    .data-table th,
+    .data-table td {
+      padding: 1rem;
+      text-align: left;
+    }
 
-            .metric-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    .data-table th {
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      color: white;
+    }
+
+    .data-table tr:nth-child(even) {
+      background: rgba(99, 102, 241, 0.05);
+    }
+
+    .data-table tr:hover {
+      background: rgba(99, 102, 241, 0.1);
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 200px;
+        padding: 1.5rem;
+      }
+      .main-header h1 {
+        font-size: 1.75rem;
+      }
+      .metrics {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
-
 <body>
-
-    <div class="container">
-        <div class="header">
-            <h1>
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M20 14V18H4V14M20 14L18 12L15 9M20 14L18 16L15 19M4 14L6 12L9 9M4 14L6 16L9 19M14 6C14 7.10457 13.1046 8 12 8C10.8954 8 10 7.10457 10 6C10 4.89543 10.8954 4 12 4C13.1046 4 14 4.89543 14 6Z"
-                        stroke="url(#gradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                    <defs>
-                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" style="stop-color:var(--primary);stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:var(--secondary);stop-opacity:1" />
-                        </linearGradient>
-                    </defs>
-                </svg>
-                Model Insights Dashboard
-            </h1>
+  <div class="dashboard">
+    <main class="main-content">
+      <header class="main-header">
+        <h1>Model Insights Dashboard</h1>
+        <button class="new-analysis-btn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H19C20.1046 3 21 3.89543 21 5V19C21 20.1046 20.1046 21 19 21ZM12 16V8M8 12H16" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          New Analysis
+        </button>
+      </header>
+      <section class="metrics">
+        <div class="metric-card">
+          <h2>{{ dataset_info['shape'][0] }} Rows</h2>
+          <p>{{ dataset_info['shape'][1] }} Features</p>
         </div>
-
-        <div class="metric-grid">
-            <div class="metric-card">
-                <div class="metric-badge">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem;">
-                        <path
-                            d="M9 17H7V10H9V17ZM17 14H15V10H17V14ZM11 16H13V20H11V16ZM20 4H4C2.897 4 2 4.897 2 6V18C2 19.103 2.897 20 4 20H20C21.103 20 22 19.103 22 18V6C22 4.897 21.103 4 20 4Z"
-                            fill="var(--primary)" />
-                    </svg>
-                    Dataset Dimensions
-                </div>
-                <h3>{{ dataset_info['shape'][0] }} Rows</h3>
-                <p>{{ dataset_info['shape'][1] }} Features</p>
-            </div>
-
-            {% set best_model = results | max(attribute='accuracy') %}
-            <div class="best-model-card">
-                <div style="position: relative; z-index: 1;">
-                    <div class="metric-badge" style="background: rgba(16, 185, 129, 0.1); color: var(--accent);">
-                        🏆 Best Performing Model
-                    </div>
-                    <h2>{{ best_model['model'] }}</h2>
-                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
-                        <div class="metric-badge">
-                            📈 {{ best_model['accuracy'] }}% Accuracy
-                        </div>
-                        <div class="metric-badge">
-                            ⚖️ {{ best_model['precision'] }}% Precision
-                        </div>
-                    </div>
-                </div>
-            </div>
+        {% set best_model = results | max(attribute='accuracy') %}
+        <div class="metric-card best-model">
+          <h2>{{ best_model['model'] }}</h2>
+          <p>Accuracy: {{ best_model['accuracy'] }}%</p>
+          <p>Precision: {{ best_model['precision'] }}%</p>
         </div>
-
+      </section>
+      <section class="data-table">
         <table>
-            <thead>
-                <tr>
-                    <th>Model</th>
-                    <th>Accuracy</th>
-                    <th>Precision</th>
-                    <th>Recall</th>
-                    <th>F1 Score</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for result in results %}
-                <tr>
-                    <td><strong>{{ result['model'] }}</strong></td>
-                    <td>{{ result['accuracy'] }}%</td>
-                    <td>{{ result['precision'] }}%</td>
-                    <td>{{ result['recall'] }}%</td>
-                    <td>{{ result['f1_score'] }}%</td>
-                </tr>
-                {% endfor %}
-            </tbody>
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Accuracy</th>
+              <th>Precision</th>
+              <th>Recall</th>
+              <th>F1 Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for result in results %}
+            <tr>
+              <td><strong>{{ result['model'] }}</strong></td>
+              <td>{{ result['accuracy'] }}%</td>
+              <td>{{ result['precision'] }}%</td>
+              <td>{{ result['recall'] }}%</td>
+              <td>{{ result['f1_score'] }}%</td>
+            </tr>
+            {% endfor %}
+          </tbody>
         </table>
-
-        <div style="text-align: center; margin-top: 2rem;">
-            <a href="/" class="btn">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style="margin-right: 0.5rem;">
-                    <path
-                        d="M19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H19C20.1046 3 21 3.89543 21 5V19C21 20.1046 20.1046 21 19 21ZM12 16V8M8 12H16"
-                        stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-                New Analysis
-            </a>
-        </div>
-    </div>
-
+      </section>
+    </main>
+  </div>
 </body>
-
 </html>
